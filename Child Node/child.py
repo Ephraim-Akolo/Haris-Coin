@@ -1,4 +1,5 @@
 import requests
+import json
 
 def sign(data:dict):
     signature = None
@@ -34,4 +35,5 @@ def send(mother:str, data:dict):
         'signature': sign(data)
     }
 
-    
+    r = requests.get("http://127.0.0.1:5000/pool", json=json.dumps(signedData))
+
