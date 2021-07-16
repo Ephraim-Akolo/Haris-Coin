@@ -4,10 +4,10 @@ This electronic cash will try to solve governmental issues towards crypto curren
 ## Introduction:
 Harris Coin is a transparent digital currency based on blockchain technology in which everyone in the network has access to the blockchain and all its data. It is a network of three (3) different types of nodes namely: 
 * Mother Node
-* Parent Node
+* First/Parent Node
 * Child Node.
 
 ![Harris Network](data/HRC-Network.png)
 
-All can communicate independently and through the mother node which is maintained by a central authority. The mother node is able to broadcast messages to all nodes as well as to release the coins from her reserves into circulation.                                                                                                                            
-
+All can communicate independently and through the mother node which is maintained by a central authority. The mother node is able to broadcast messages to all nodes as well as to release the coins from her reserves into circulation. The mother node is the only one able to add first nodes to her network.                                                                                                                         
+The parent node's can be controlled by registered individuals or institutions to process and add transactions to the block, and also register or add users (child node's) to the network. Child node's are the users of the network, as they can only make transactions and access the block chain. Both the parent and mother node must have a child node, in other to be able to hold or transfer the coin. Therefore, the network in a way is actually a network of child node's.
