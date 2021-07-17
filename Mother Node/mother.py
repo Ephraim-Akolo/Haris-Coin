@@ -2,8 +2,13 @@ from flask import Flask, request, jsonify
 
 
 app = Flask(__name__)
-@app.route('/<dest>', methods=['GET', 'POST'])
-def index(dest):
+
+@app.route('/')
+def index():
+    return "OK"
+
+@app.route('/pool', methods=['GET', 'POST'])
+def pool():
     content = request.json
-    print(type(content))
-    return jsonify({'message': dest})
+    print(content)
+    return jsonify({'in_pool': True})
