@@ -1,6 +1,14 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+
 
 app = Flask(__name__)
+
 @app.route('/')
-def hello():
-    return "hello world!"
+def index():
+    return "OK"
+
+@app.route('/pool', methods=['GET', 'POST'])
+def pool():
+    content = request.json
+    print(content)
+    return jsonify({'in_pool': True})
