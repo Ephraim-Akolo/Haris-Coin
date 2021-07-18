@@ -4,7 +4,7 @@ import json
 class Child:
     def __init__(self, mother:str) -> None:
         '''
-        Sends sign's and sends data to Mother Node.
+        sign's and sends data to Mother Node.
 
             mother: str
                 address of the mother node
