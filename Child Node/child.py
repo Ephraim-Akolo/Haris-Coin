@@ -36,8 +36,7 @@ class Child:
         Use the public id in 'publicID' to Encrypt the data in 'appendedData'
         and returns the signed data.
         '''
-        signed = None
-        return signed
+        return hashToSign
 
     def sign(self, data:dict) -> str:
         '''
@@ -49,7 +48,7 @@ class Child:
         # Append and hash the data
         appendedData = sha256()
         for values in data.values():
-            appendedData.update(values)
+            appendedData.update(values.encode('utf-8'))
         # sign the hash with the sender(public key) and return
         return self.signature(appendedData.hexdigest(), sender) 
 
