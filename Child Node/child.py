@@ -1,6 +1,7 @@
 from hashlib import sha256
 import requests
 import json
+import rsa
 
 class Child:
     def __init__(self, mother:str) -> None:
@@ -31,24 +32,30 @@ class Child:
             return
         self._status = r.status_code
     
-    def signature(self, hashToSign:str, publicID:str) -> str:
+    def signature(self, hashToSign:str, privateID:bytes) -> str:
         '''
         Use the public id in 'publicID' to Encrypt the data in 'appendedData'
         and returns the signed data.
         '''
-        return hashToSign
+        h = hashToSign.encode('utf-8')
+        _key = rsa.PublicKey.load_pkcs1(privateID) # PublicKey function serve as Private key
+        return rsa.encrypt(h, _key).decode('ISO-8859-1')
 
     def sign(self, data:dict) -> str:
         '''
-        Digitally signs the appended values of the dictionary with the public key
-        of the sender to show that the transaction was truely approved by the sender
+        Digitally signs the appended values of the dictionary of the sender
+        to show that the transaction was truely approved by the sender
         '''
-        # copy the sender(public key)
-        sender = data['sender']
+        order = ('transactionID', 'sender', 'receiver', 'amount', 'token')
+        # copy the sender(private key)
+        sender = data['sender']['private']
         # Append and hash the data
         appendedData = sha256()
-        for values in data.values():
-            appendedData.update(values.encode('utf-8'))
+        for value in order:
+            if value == 'sender':
+                appendedData.update(data['sender']['public'])
+                continue
+            appendedData.update(data[value].encode('utf-8'))
         # sign the hash with the sender(public key) and return
         return self.signature(appendedData.hexdigest(), sender) 
 
@@ -67,12 +74,12 @@ class Child:
         assert type(data) == dict
         assert len(data) == self._expectedDictSize
         for object in data.values():
-            assert type(object) == str
+            assert type(object) == str or type(object) == dict
 
         # Update and Sign data
         signedData = {
             'id': data['transactionID'],
-            'sender': data['sender'],
+            'sender': data['sender']['public'].decode('utf-8'),
             'receiver': data['receiver'],
             'amount': data['amount'],
             'token': data['token'],
