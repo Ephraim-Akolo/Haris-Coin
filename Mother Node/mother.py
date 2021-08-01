@@ -3,24 +3,29 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# data base in reality will be a relational database
-DATABASE = []
+# data base in reality will be a relational Database
+POOL = []
+CHAIN = {}
+blockSize = 99
+startNewBlock = False
 
 def addToCurrentBlock(content) -> None:
-    blocks = len(DATABASE)
-    if blocks == 0:
-        DATABASE.append({'size': 1,'1': content})
+    blocks = len(POOL)
+    global startNewBlock
+    if blocks == 0 or startNewBlock:
+        POOL.append({'size': 1,'1': content})
+        startNewBlock = False
         return
-    elif DATABASE[blocks-1]['size'] > 99:
-        DATABASE.append({'size': 1,'1': content})
+    elif POOL[blocks-1]['size'] > blockSize:
+        POOL.append({'size': 1,'1': content})
         return
     ## check if block is aready in pool and exit if true
 
     ## end of check
-    DATABASE[blocks-1]['size'] += 1
-    size = DATABASE[blocks-1]['size']
-    DATABASE[blocks-1][str(size)] = content
-    print(DATABASE)
+    POOL[blocks-1]['size'] += 1
+    size = POOL[blocks-1]['size']
+    POOL[blocks-1][str(size)] = content
+    print(POOL)
 
 
 @app.route('/')
@@ -32,14 +37,18 @@ def pool():
     content = request.json
     # we assume that what ever is being sent to the pool is genuine 
     addToCurrentBlock(content)
+    print(content, "block received successfuly!", sep='\n')
     return jsonify({'in_pool': True})
 
 @app.route('/getblock/<index>', methods=['GET', 'POST'])
 def getBlock(index):
-    return jsonify(DATABASE[int(index)])
+    if int(index) == len(POOL) - 1:
+        global startNewBlock
+        startNewBlock = True
+    return jsonify(POOL[int(index)])
 
 @app.route('/blockcount', methods=['GET', 'POST'])
 def blockCount():
-    return jsonify({'blocks': len(DATABASE)})
+    return jsonify({'blocks': len(POOL)})
 
 
