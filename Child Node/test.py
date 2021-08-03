@@ -1,9 +1,19 @@
-from rsa.key import PublicKey
+import json
+
+from requests.api import delete
 from child import Child
 import rsa
 
-(private_key, public_key) = rsa.newkeys(1024)
-(sender_private_key, sender_public_key) = rsa.newkeys(1024)
+# (private_key, public_key) = rsa.newkeys(1024)
+# (sender_private_key, sender_public_key) = rsa.newkeys(1024)
+
+with open('..\keys.json', 'r') as file:
+    keys = json.load(file)
+    private_key = keys['private1'].encode('utf-8')
+    public_key = keys['public1'].encode('utf-8')
+    receiver = keys['public2']
+    keys = ''
+
 motherAddress = "http://127.0.0.1:5000/"
 
 if __name__ == "__main__":
@@ -11,12 +21,12 @@ if __name__ == "__main__":
     transactionID = 1
     print('mother connection status:',childNode.status)
     amount = 40
-    print(f'sending {amount}HRC to ', rsa.PublicKey.save_pkcs1(sender_private_key, 'PEM').decode('utf-8'))
-    print(f'sender address: {rsa.PublicKey.save_pkcs1(private_key, "PEM").decode("utf-8")}')
+    print(f'sending {amount}HRC to: ', receiver)
+    print(f'sender address: {public_key.decode("utf-8")}')
     data = {
         'transactionID': str(transactionID),
-        'sender': {'private': rsa.PublicKey.save_pkcs1(private_key, 'PEM'), 'public': rsa.PrivateKey.save_pkcs1(public_key, 'PEM')},
-        'receiver': rsa.PublicKey.save_pkcs1(sender_private_key, 'PEM').decode('utf-8'),
+        'sender': {'private': private_key, 'public': public_key},
+        'receiver': receiver,
         'amount': str(amount),
         'token': '5',
     }
