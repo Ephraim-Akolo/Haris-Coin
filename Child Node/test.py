@@ -2,15 +2,14 @@ import json
 
 from requests.api import delete
 from child import Child
-import rsa
 
 # (private_key, public_key) = rsa.newkeys(1024)
 # (sender_private_key, sender_public_key) = rsa.newkeys(1024)
 
-with open('..\keys.json', 'r') as file:
+with open('C:/Users/Ephraim/Desktop/vscode/BlockChain/Harris-Coin/keys.json', 'r') as file:
     keys = json.load(file)
-    private_key = keys['private1'].encode('utf-8')
-    public_key = keys['public1'].encode('utf-8')
+    private_key = keys['private0'].encode('utf-8')
+    public_key = keys['public0'].encode('utf-8')
     receiver = keys['public2']
     keys = ''
 
@@ -27,8 +26,7 @@ if __name__ == "__main__":
         'transactionID': str(transactionID),
         'sender': {'private': private_key, 'public': public_key},
         'receiver': receiver,
-        'amount': str(amount),
-        'token': '5',
+        'amount': str(amount)
     }
     d = childNode.send(data)
     print('sent sucessfully!')

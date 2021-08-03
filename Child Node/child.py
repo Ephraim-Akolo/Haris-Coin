@@ -12,7 +12,7 @@ class Child:
                 address of the mother node
         '''
         self._status = False
-        self._expectedDictSize = 5
+        self._expectedDictSize = 4
         assert type(mother) == str
         self.mother = mother
         self.testMother()
@@ -46,7 +46,7 @@ class Child:
         Digitally signs the appended values of the dictionary of the sender
         to show that the transaction was truely approved by the sender
         '''
-        order = ('transactionID', 'sender', 'receiver', 'amount', 'token')
+        order = ('transactionID', 'sender', 'receiver', 'amount')
         # copy the sender(private key)
         sender = data['sender']['private']
         # Append and hash the data
@@ -82,12 +82,11 @@ class Child:
             'sender': data['sender']['public'].decode('utf-8'),
             'receiver': data['receiver'],
             'amount': data['amount'],
-            'token': data['token'],
             'signature': self.sign(data)
         }
 
         # Send data to the mother pool
-        r = requests.get(self.mother + "pool", json=json.dumps(signedData))
+        r = requests.get(self.mother + "pool", json=signedData)
         dict_ = r.json()
         dict_['status_code'] = r.status_code
         return dict_
