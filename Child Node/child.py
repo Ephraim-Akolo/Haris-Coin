@@ -91,4 +91,46 @@ class Child:
         dict_['status_code'] = r.status_code
         return dict_
 
+    def getChain(self, position:str) -> None:
+        '''
+        get the blockchain (ledger)
+        
+        position: str
+            can range from -1 to infinity
+            -1: all the transaction blocks(complete history/ledger)
+            0-infinity: the specific block
+        '''
+        r = requests.get(self.mother + f'getchain/{position}')
+        assert r.status_code == 200
+        self.CHAIN = r.json()
+    
+    def checkBalace(self, public_key) -> float:
+        self.getChain('all')
+        negatives = 0
+        positives = 0
+        r = requests.get(self.mother + 'motherkey', json={'key': public_key})
+        assert r.status_code == 200
+        if r.json()['ismother'] == True:
+            for blockNum in range(self.CHAIN['size']):
+                for transNum in range(self.CHAIN[str(blockNum)]['size']):
+                    transaction = self.CHAIN[str(blockNum)][str(transNum)]
+                    if public_key == transaction['sender']:
+                        negatives += float(transaction['amount'])
+                        negatives += float(self.CHAIN[str(blockNum)]['token'])
+                    elif public_key == transaction['receiver']:
+                        positives += float(transaction['amount'])
+                    positives += (0.25 * float(self.CHAIN[str(blockNum)]['token']))
+        else:
+            for blockNum in range(self.CHAIN['size']):
+                for transNum in range(self.CHAIN[str(blockNum)]['size']):
+                    transaction = self.CHAIN[str(blockNum)][str(transNum)]
+                    if public_key == transaction['sender']:
+                        negatives += float(transaction['amount'])
+                        negatives += float(self.CHAIN[str(blockNum)]['token'])
+                    elif public_key == transaction['receiver']:
+                        positives += float(transaction['amount'])
+                    if public_key == self.CHAIN[str(blockNum)]['verifier']:
+                        positives += (0.75 * float(self.CHAIN[str(blockNum)]['token']))
+        return (positives - negatives)
+
         

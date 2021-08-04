@@ -1,38 +1,28 @@
 from hashlib import sha256
 import requests
 import json
+import rsa
 from datetime import datetime
 
 
 class FirstNode:
-    def __init__(self, mother:str) -> None:
-        # ## Upload Test Blocks
-        # data = {
-        #     'transactionID': '1',
-        #     'sender': 'akolo',
-        #     'receiver': 'Jonah',
-        #     'amount': '40',
-        #     'token': '5',
-        # }
-        # for _ in range(3):
-        #     r = requests.get(mother + 'pool', json=json.dumps(data))
-        #     print('test upload:', r)
-        # ## End of Upload Test Blocks
+    def __init__(self, mother:str, mining_deposit_account) -> None:
         self.mother = mother
-        with open('C:/Users/Ephraim/Desktop/vscode/BlockChain/Harris-Coin/keys.json', 'r') as file:
-            keys = json.load(file)
-            self.private_key = keys['private4'].encode('utf-8')
-            self.public_key = keys['public4'].encode('utf-8')
-            self.mother_key_s = keys['public0']
-            self.receiver_s = keys['public2']
+        self.public_key = mining_deposit_account
         self.getChain('all')
     
     def blockCount(self) -> int:
+        '''
+        counts the number of blocks in server pool
+        '''
         r = requests.get(self.mother + 'blockcount')
         assert r.status_code == 200
         return r.json()['blocks']
     
     def getBlock(self, index) -> dict:
+        '''
+        gets block of unverified data from the server pool
+        '''
         r = requests.get(self.mother + f'getblock/{index}')
         assert r.status_code == 200
         return r.json()
@@ -69,7 +59,7 @@ class FirstNode:
 
     def getHash(self, block) -> str:
         '''
-        compute the hash of the current block 
+        Proof of work function
         '''
         order = ('time', 'difficulty', 'verifier', 'token', 'previousHash')
         nonce = 0
@@ -86,6 +76,9 @@ class FirstNode:
             
     
     def checkBalace(self, public_key) -> float:
+        '''
+        returns the balanced amount of coin from the blockchain
+        '''
         negatives = 0
         positives = 0
         r = requests.get(self.mother + 'motherkey', json={'key': public_key})
@@ -109,7 +102,7 @@ class FirstNode:
                         negatives += float(transaction['token'])
                     elif public_key == transaction['receiver']:
                         positives += float(transaction['amount'])
-                    elif public_key == self.CHAIN[str(blockNum)]['verifier']:
+                    if public_key == self.CHAIN[str(blockNum)]['verifier']:
                         positives += (0.75 * float(self.CHAIN[str(blockNum)]['token']))
         return (positives - negatives)
         
@@ -120,8 +113,28 @@ class FirstNode:
         r = requests.get(self.mother + 'gettoken')
         assert r.status_code == 200
         return r.json()['token']
+    
+    def signatureVerified(self, data) -> bool:
+        '''
+        function that verifies the sender signature.
+        '''
+        order = ('id', 'sender', 'receiver', 'amount')
+        sender = rsa.PrivateKey.load_pkcs1(data['sender'].encode('utf-8'), 'PEM')
+        appendedData = sha256()
+        for value in order:
+            appendedData.update(data[value].encode('utf-8'))
+        hash = rsa.decrypt(data['signature'].encode('ISO-8859-1'), sender)
+        assert type(hash.decode('utf-8')) == type(appendedData.hexdigest())
+        if hash.decode('utf-8') == appendedData.hexdigest():
+            return True
+        else:
+            return False
+        
 
     def blocksVerified(self, block) -> dict:
+        '''
+        verifies the sender balance and the signature.
+        '''
         vblock = {'size': 0}
         n = 0
         for num in range(block['size']):
@@ -129,7 +142,7 @@ class FirstNode:
             sender = transaction['sender']
             balance = self.checkBalace(sender)
             token = self.getTokenAmount()
-            if balance > (int(transaction['amount']) + float(token)):
+            if (balance > (int(transaction['amount']) + float(token))) and self.signatureVerified(transaction):
                 vblock['size'] += 1
                 vblock[str(n)] = transaction
                 n += 1
@@ -137,11 +150,17 @@ class FirstNode:
 
 
     def summitMinnedBlock(self, block, index):
+        '''
+        submits mined and verified block.
+        '''
         r = requests.get(self.mother + f'summitminnedblock/{index}', json=block)
         assert r.status_code == 200
         return r.json()
     
     def mineBlock(self, index):
+        '''
+        mines an unverified block from the server transaction pool.
+        '''
         block = self.getBlock(index)
         block = self.blocksVerified(block)
         block['time'] = datetime.now().strftime("%I:%M%p %B %d %Y")
@@ -153,14 +172,3 @@ class FirstNode:
         block['nonce'] = str(nonce)
         r = self.summitMinnedBlock(block, index)
         print(r)
-
-
-if __name__ == '__main__':
-    
-    node = FirstNode("http://127.0.0.1:5000/")
-    print("total unprocessed block:", node.blockCount())
-    print(type(node.receiver_s))
-    print("block index=1: ", node.checkBalace(node.public_key.decode('utf-8')))
-    print("block received sucessfully!")
-    #node.mineBlock(0)
-    #print(node.CHAIN)

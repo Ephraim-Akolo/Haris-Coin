@@ -119,13 +119,20 @@ def summitMinnedBlock(index):
     print(hash, 'and', block['hash'])
     if hash != block['hash']:
         return jsonify({'submit_status': False, 'Error': 'invalid hash'})
-    
-    # confirm block is from pool
+    # check if block is empyty
+    try:
+        block['0']
+    except:
+        POOL.pop(int(index))
+        return jsonify({'submit_status': False, 'Error': 'empty block'})
+    # confirm block is in pool
     size = POOL[int(index)]['size']
     _block_ = POOL[int(index)]
     for i in range(size):
-        if block['0']['sender'] != _block_[str(i)]['sender'] and block['0']['signature'] != _block_[str(i)]['signature']:
-            return jsonify({'submit_status': False, 'Error': 'invalid block'})
+        if block['0']['sender'] == _block_[str(i)]['sender'] and block['0']['signature'] == _block_[str(i)]['signature']:
+            break
+    else:
+        return jsonify({'submit_status': False, 'Error': 'invalid block'})
     # add block to chain
     CHAIN[str(CHAIN['size'])] = block
     CHAIN['size'] += 1
