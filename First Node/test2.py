@@ -12,8 +12,8 @@ if __name__ == '__main__':
     while True:
         system('cls')
         print('Name: public3',end='\n\n')
-        command = input('Enter "mine block", "available blocks", "check balance", "show public key", "show private key", "show chain", "update chain"  or "exit" command\nCOMMAND: ')
-        if command.lower() == 'check balance':
+        command = input('Enter "mine block", "available blocks", "balance", "show public key", "show private key", "show chain", "update chain"  or "exit" command\nCOMMAND: ')
+        if command.lower() == 'balance':
             balance = node.checkBalace(public_key.decode("utf-8"))
             print(f'Balance from Nework: {balance}')
             input('\npress enter key...')
