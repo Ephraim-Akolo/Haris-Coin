@@ -2,9 +2,9 @@ import json
 from child import Child
 from os import system
 import rsa
-motherAddress = "http://127.0.0.1:5000/"
+motherAddress = "https://jakeephraim.pythonanywhere.com/"
 
-with open('C:/Users/Ephraim/Desktop/vscode/BlockChain/Harris-Coin/keys.json', 'r') as file:
+with open(".\keys.json", 'r') as file:
     keys = json.load(file)
     private_key = keys['private0'].encode('utf-8')
     public_key = keys['public0'].encode('utf-8')
@@ -17,11 +17,12 @@ if __name__ == "__main__":
     print('mother connection status:',childNode.status)
     while True:
         system('cls')
-        print('Name: public0',end='\n\n')
-        command = input('Enter "send coin", "check balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
-        if command.lower() == 'send coin':
+        print('CBN Name: public0',end='\n\n')
+        command = input('Enter "send", "balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
+        if command.lower() == 'send':
             amount = input('Amount (HRC): ')
             receiver = keys[input('Receiver key: ')]
+            count = int(input('Number of Transaction: '))
             data = {
                 'transactionID': str(transactionID),
                 'sender': {'private': private_key, 'public': public_key},
@@ -29,13 +30,14 @@ if __name__ == "__main__":
                 'amount': str(amount)
             }
             print('sending...')
-            d = childNode.send(data)
-            transactionID += 1
-            print('sent sucessfully!')
-            print(d)
+            for i in range(count):
+                d = childNode.send(data)
+                transactionID += 1
+                print(i+1,'sent sucessfully!')
+                print(d)
             input('\npress enter key...')
             system('cls')
-        elif command.lower() == 'check balance':
+        elif command.lower() == 'balance':
             balance = childNode.checkBalace(public_key.decode("utf-8"))
             print(f'Balance from Nework: {balance}')
             input('\npress enter key...')
