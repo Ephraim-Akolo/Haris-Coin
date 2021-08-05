@@ -2,9 +2,9 @@ import json
 from child import Child
 from os import system
 import rsa
-motherAddress = "http://127.0.0.1:5000/"
+motherAddress = "https://jakeephraim.pythonanywhere.com/"
 
-with open('C:/Users/Ephraim/Desktop/vscode/BlockChain/Harris-Coin/keys.json', 'r') as file:
+with open(".\keys.json", 'r') as file:
     keys = json.load(file)
     private_key = keys['private0'].encode('utf-8')
     public_key = keys['public0'].encode('utf-8')
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print('mother connection status:',childNode.status)
     while True:
         system('cls')
-        print('Name: public0',end='\n\n')
+        print('CBN Name: public0',end='\n\n')
         command = input('Enter "send coin", "check balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
         if command.lower() == 'send coin':
             amount = input('Amount (HRC): ')

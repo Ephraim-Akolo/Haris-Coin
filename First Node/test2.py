@@ -2,16 +2,16 @@ from first import FirstNode
 from os import system
 import json
 
-with open('C:/Users/Ephraim/Desktop/vscode/BlockChain/Harris-Coin/keys.json', 'r') as file:
+with open(".\keys.json", 'r') as file:
     keys = json.load(file)
     private_key = keys['private3'].encode('utf-8')
     public_key = keys['public3'].encode('utf-8')
 
 if __name__ == '__main__':
-    node = FirstNode("http://127.0.0.1:5000/", public_key)
+    node = FirstNode("https://jakeephraim.pythonanywhere.com/", public_key)
     while True:
         system('cls')
-        print('Name: public1',end='\n\n')
+        print('Name: public3',end='\n\n')
         command = input('Enter "mine block", "available blocks", "check balance", "show public key", "show private key", "show chain", "update chain"  or "exit" command\nCOMMAND: ')
         if command.lower() == 'check balance':
             balance = node.checkBalace(public_key.decode("utf-8"))

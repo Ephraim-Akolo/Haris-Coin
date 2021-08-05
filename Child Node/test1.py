@@ -2,9 +2,9 @@ import json
 from child import Child
 from os import system
 import rsa
-motherAddress = "http://127.0.0.1:5000/"
+motherAddress = "https://jakeephraim.pythonanywhere.com/"
 
-with open('C:/Users/Ephraim/Desktop/vscode/BlockChain/Harris-Coin/keys.json', 'r') as file:
+with open(".\keys.json", 'r') as file:
     keys = json.load(file)
     private_key = keys['private1'].encode('utf-8')
     public_key = keys['public1'].encode('utf-8')
