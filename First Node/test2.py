@@ -13,7 +13,7 @@ if __name__ == '__main__':
     while True:
         system('cls')
         print('Name: public3',end='\n\n')
-        command = input('Enter "mine block", "available blocks", "balance", "show public key", "show private key", "show chain", "update chain"  or "exit" command\nCOMMAND: ')
+        command = input('Enter "mine block", "available blocks", "show block", "balance", "show public key", "show private key", "show chain", "update chain"  or "exit" command\nCOMMAND: ')
         if command.lower() == 'balance':
             balance = node.checkBalace(public_key.decode("utf-8"))
             print(f'Balance from Nework: {balance}')
@@ -33,6 +33,19 @@ if __name__ == '__main__':
                         continue
                     print(obj,': ', block[obj])
                 print()
+            input('\n\npress enter key...')
+            system('cls')
+        elif command.lower() == 'show block':
+            chain = node.CHAIN
+            size = 'size'
+            n = int(input('block index: '))
+            block = chain[str(n-1)]
+            for k in range(block[size]):
+                trans = block[str(k)]
+                print('\n\nSENDER (index 32-92): ', trans['sender'][32:92])
+                print('RECEIVER (index 32-92): ', trans['receiver'][32:92])
+                print('AMOUNT (index 32-92): ', trans['amount'])
+                print('SIGNATURE[fingerprint] (index 32-92): ', trans['signature'][32:92], end='\n')
             input('\n\npress enter key...')
             system('cls')
         elif command.lower() == 'update chain':
