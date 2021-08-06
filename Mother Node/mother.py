@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, json, request, jsonify
 from hashlib import sha256
 
 app = Flask(__name__)
@@ -33,6 +33,16 @@ CHAIN = {
     '0': firstBlock
     }
 
+def saveChain() -> None:
+    global CHAIN
+    with open('chain.json', 'w') as file:
+        json.dump(CHAIN, file)
+
+def loadChain() -> None:
+    global CHAIN
+    with open('chain.json', 'r') as file:
+        CHAIN = json.load(file)
+
 def addToCurrentBlock(content) -> None:
     blocks = len(POOL)
     global startNewBlock
@@ -50,6 +60,10 @@ def addToCurrentBlock(content) -> None:
     POOL[blocks-1]['size'] += 1
     POOL[blocks-1][str(size)] = content
 
+try:
+    loadChain()
+except:
+    saveChain()
 
 @app.route('/')
 def index():
@@ -138,5 +152,6 @@ def summitMinnedBlock(index):
     CHAIN['size'] += 1
     # remove from pool
     POOL.pop(int(index))
+    saveChain()
     return jsonify({'submit_status': True, 'Error': 'None'})
     
