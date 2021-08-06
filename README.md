@@ -41,7 +41,11 @@ Functions offered by the mother noded include
   
 * __getToken(/gettoken) -> {"token": number}:__ This route is used to query the server to get the set token by the mother node. The token is simply the transaction fee paid to send the coin.
   
-* __isMother(/motherkey, json={"key": public key}) -> {"ismother": True|False}:__ This route is used to query the mother node or server for the
+* __isMother(/motherkey, json={"key": public key}) -> {"ismother": True|False}:__ This route is used to query the mother node or server if the key passed in json format is the mother public key. Returns a json object with "ismother" set to True or False.
+  
+* __getCurrentHash(/getcurrenthash) -> {"hash": last block hash}:__ This route is used to query the server for the last blocks hash value. It returns a json object with "hash" value set to the hash of the last block in the chain.
 
+* __summitMinnedBlock(/summitminnedblock, json=MINED_DATA) -> {"submit_status": True|False, "Error": Message}:__ This route is used to submit mined and verified blocks of transaction (MINED_DATA) to the server in json format to be added to the chain. The MINED_DATA must contain the time, difficulty(gotten from server), verifier public key, token (gotten form server), previous hash (gotten from server as current hash), nonce which is the prove of work, and the new current hash. The mother node verifies that this data was truely mined by verifying the proof of work. This is done by appending or concatinating the string value of the above first five data and finally with the nonce(proof of work), to get a string of data which can be encoded to a byte format and hashed using the sha256 to a hexadecimal string which is then compared with the hash in the block. The prove of work is true if the verified hash matches the block hash and also begins with a leading number of zero specified by the difficulty requirement.
+  
 ## Transactions
 A child node transfer the coin to the next child node by signing the transaction details with the public key of the next child node, so that the next child node can verify the transaction was made to it by its signed public key. The transactions block can be added to the chain by hashing the previous hash and the current block with a certain difficulty. The block is then broadcasted to the mother node and first nodes for verification before being added to the chain. The transaction with next transaction id is considered first and if the next transaction's id does not match the next, it is negleted.
