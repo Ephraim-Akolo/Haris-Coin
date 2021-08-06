@@ -18,7 +18,7 @@ if __name__ == "__main__":
     while True:
         system('cls')
         print('Name: public1',end='\n\n')
-        command = input('Enter "send coin", "check balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
+        command = input('Enter "send coin", "balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
         if command.lower() == 'send coin':
             amount = input('Amount (HRC): ')
             receiver = keys[input('Receiver key: ')]
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 print(d)
             input('\npress enter key...')
             system('cls')
-        elif command.lower() == 'check balance':
+        elif command.lower() == 'balance':
             balance = childNode.checkBalace(public_key.decode("utf-8"))
             print(f'Balance from Nework: {balance}')
             input('\npress enter key...')
