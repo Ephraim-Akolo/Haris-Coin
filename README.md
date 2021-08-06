@@ -70,7 +70,7 @@ Some function currently in the first node python script includes:
   
 * __summitMinnedBlock(block, index) -> str:__ This function submits the mined block to the server along with the pool index number.
   
-* mineBlock(index) -> str:__ This is the function that triggers the mining sequence. It takes the index of the pool block to mine and assignes the workload to the respective functions.
+* __mineBlock(index) -> str:__ This is the function that triggers the mining sequence. It takes the index of the pool block to mine and assignes the workload to the respective functions.
   
 ## Transactions
 A child node transfer the coin to the next child node by signing the transaction details with the public key of the next child node, so that the next child node can verify the transaction was made to it by its signed public key. The transactions block can be added to the chain by hashing the previous hash and the current block with a certain difficulty. The block is then broadcasted to the mother node and first nodes for verification before being added to the chain. The transaction with next transaction id is considered first and if the next transaction's id does not match the next, it is negleted.
