@@ -20,8 +20,20 @@ if __name__ == '__main__':
             input('\npress enter key...')
             system('cls')
         elif command.lower() == 'show chain':
-            print(node.CHAIN)
-            input('\npress enter key...')
+            chain = node.CHAIN
+            size = 'size'
+            order = ('time', 'difficulty', 'verifier', 'token', 'previousHash', 'nonce', 'hash')
+            print('\nCHAIN SIZE: ', chain[size], end='\n\n')
+            for n in range(chain[size]):
+                block = chain[str(n)]
+                print('BLOCK ', n+1)
+                for obj in order:
+                    if obj == 'verifier':
+                        print(obj,'(index 32-52): ', block[obj][32:52])
+                        continue
+                    print(obj,': ', block[obj])
+                print()
+            input('\n\npress enter key...')
             system('cls')
         elif command.lower() == 'update chain':
             node.getChain('all')
