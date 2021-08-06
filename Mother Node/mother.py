@@ -131,8 +131,8 @@ def summitMinnedBlock(index):
         data += block[item]
     hash = sha256(data.encode('utf-8')).hexdigest()
     print(hash, 'and', block['hash'])
-    if hash != block['hash']:
-        return jsonify({'submit_status': False, 'Error': 'invalid hash'})
+    if hash != block['hash'] and (int(hash, 16) >= 16**(64-difficulty)):
+        return jsonify({'submit_status': False, 'Error': 'invalid hash or difficulty'})
     # check if block is empyty
     try:
         block['0']
