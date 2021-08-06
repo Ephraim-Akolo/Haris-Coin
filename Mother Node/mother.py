@@ -79,13 +79,16 @@ def pool():
 
 @app.route('/getblock/<index>', methods=['GET'])
 def getBlock(index):
-    if int(index) == len(POOL) - 1: # if you are requesting for the current updating block
-        if len(POOL) <= 1:
-            global startNewBlock
-            startNewBlock = True
-        else:
-            return jsonify({'error': 'index currently updating!'})
-    return jsonify(POOL[int(index)])
+    try:
+        if int(index) == len(POOL) - 1: # if you are requesting for the current updating block
+            if len(POOL) <= 1:
+                global startNewBlock
+                startNewBlock = True
+            else:
+                return jsonify({'error': 'index currently updating!'})
+        return jsonify(POOL[int(index)])
+    except:
+        return jsonify({'error': 'index out of range!'})
 
 @app.route('/blockcount', methods=['GET'])
 def blockCount():
