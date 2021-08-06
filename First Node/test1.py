@@ -1,6 +1,7 @@
 from first import FirstNode
 from os import system
 import json
+import rsa
 
 with open(".\keys.json", 'r') as file:
     keys = json.load(file)
@@ -19,8 +20,20 @@ if __name__ == '__main__':
             input('\npress enter key...')
             system('cls')
         elif command.lower() == 'show chain':
-            print(node.CHAIN)
-            input('\npress enter key...')
+            chain = node.CHAIN
+            size = 'size'
+            order = ('time', 'difficulty', 'verifier', 'token', 'previousHash', 'nonce', 'hash')
+            print('\nCHAIN SIZE: ', chain[size], end='\n\n')
+            for n in range(chain[size]):
+                block = chain[str(n)]
+                print('BLOCK ', n+1)
+                for obj in order:
+                    if obj == 'verifier':
+                        print(obj,'(index 32-52): ', block[obj][32:52])
+                        continue
+                    print(obj,': ', block[obj])
+                print()
+            input('\n\npress enter key...')
             system('cls')
         elif command.lower() == 'update chain':
             node.getChain('all')
@@ -50,10 +63,10 @@ if __name__ == '__main__':
             system('cls')
         elif command.lower() == 'generate keys':
             (new_private_key, new_public_key) = rsa.newkeys(1024)
-            print('Private Key (KEEP SECRET):\n\n', new_private_key.save_pkcs1('PEM').decode("utf-8"))
+            print('Private Key (KEEP SECRET):\n\n', new_private_key.save_pkcs1('PEM'))
             input('\npress enter key to get public key...')
             system('cls')
-            print('Public Key (serve as public address):\n\n', new_public_key.save_pkcs1('PEM').decode("utf-8"))
+            print('Public Key (serve as public address):\n\n', new_public_key.save_pkcs1('PEM'))
             input('\npress enter key...')
             system('cls')
         else:
