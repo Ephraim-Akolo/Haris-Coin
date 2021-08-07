@@ -34,7 +34,7 @@ class Child:
     
     def signature(self, hashToSign:str, privateID:bytes) -> str:
         '''
-        Use the public id in 'publicID' to Encrypt the data in 'appendedData'
+        Use the private id in 'privateID' to Encrypt the data in 'appendedData'
         and returns the signed data.
         '''
         h = hashToSign.encode('utf-8')
