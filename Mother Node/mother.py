@@ -88,7 +88,7 @@ def getBlock(index):
                 return jsonify({'error': 'index currently updating!'})
         return jsonify(POOL[int(index)])
     except:
-        return jsonify({'error': 'index out of range!'})
+        return jsonify({'error': 'index out of range! block count may be zero(no available blocks of unprocess data)'})
 
 @app.route('/blockcount', methods=['GET'])
 def blockCount():
