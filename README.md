@@ -116,7 +116,7 @@ A child node transfer the coin to the next child node by signing the transaction
   
   * If the value of the appended nonce(guessed number) in the above do not produce a hash that matches the difficulty(a number less than the value with the preceeding number of zero's), another number is guessed until the difficulty is attained. The nonce and the hash(meeting the difficulty requirement) of a block is the prove that work was done(prove of work) on that block.
   
-  * The block is then submitted back to the server through the "summitminnedblock" route of the mother as a json object to be added to the chain of blocks (blockchain). But before that, the mother confirms the prove of work by hashing the data appended to the nonce, and if the hash matches the given block hash with the given difficulty requirement, the block is added to chain and it becomes the new current or last block.
+  * The block is then submitted back to the server through the "summitminnedblock" route of the mother as a json object to be added to the chain of blocks (blockchain). But before that, the mother confirms the prove of work by hashing the data appended to the nonce, and if the hash matches the given block hash with the given difficulty requirement, the block is added to chain and it becomes the new current or last block.The blockchain is saved as a json file on the host hard drive.
   
   * The first "first node" to complete the task and send to the server get's 75% of the token of all transaction's in the verified block, and the mother node always get's 25% of every transaction.
   
