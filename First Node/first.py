@@ -141,6 +141,9 @@ class FirstNode:
             transaction = block[str(num)]
             sender = transaction['sender']
             balance = self.checkBalace(sender)
+            for i in range(vblock['size']):
+                if sender == vblock[str(i)]['sender']:
+                    balance -= int(vblock[str(i)]['amount'])
             token = self.getTokenAmount()
             if (balance > (int(transaction['amount']) + float(token))) and self.signatureVerified(transaction):
                 vblock['size'] += 1
