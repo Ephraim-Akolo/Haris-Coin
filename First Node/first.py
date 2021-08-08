@@ -106,7 +106,7 @@ class FirstNode:
                         positives += (0.75 * float(self.CHAIN[str(blockNum)]['token']))
         return (positives - negatives)
         
-    def getTokenAmount(self):
+    def getTokenAmount(self) -> str:
         '''
         get the token amount from the server
         '''
