@@ -18,8 +18,8 @@ if __name__ == "__main__":
     while True:
         system('cls')
         print('Name: public2',end='\n\n')
-        command = input('Enter "send coin", "balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
-        if command.lower() == 'send coin':
+        command = input('Enter "send", "balance", "show public key", "show private key", "generate keys" or "exit" command\nCOMMAND: ')
+        if command.lower() == 'send':
             amount = input('Amount (HRC): ')
             receiver = keys[input('Receiver key: ')]
             count = int(input('Number of Transaction: '))
